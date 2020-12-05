@@ -1,3 +1,7 @@
+
+# Solves the first challenge from day 1: 
+# Find 2 numbers that sum up to 2020.
+
 import os
 import json
 import math
