@@ -26,9 +26,7 @@ def verify_password(min, max, char, pw):
         if(x == char):
             count += 1
 
-    f = count >= int(min) and count <= int(max)
-    return f
-
+    return count >= int(min) and count <= int(max)
 
 def main():
     sol = solve(load_challenge())
