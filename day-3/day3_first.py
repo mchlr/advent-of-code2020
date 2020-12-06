@@ -13,9 +13,7 @@ def solve(map):
     xindex = 0
     for line in map:
         arr = list(line)
-        idx = (xindex % len(arr))
-
-        if(arr[idx] == "#"):
+        if(arr[(xindex % len(arr))] == "#"):
             tree_count += 1
         xindex += 3
 
