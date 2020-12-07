@@ -25,16 +25,22 @@ def find_and_validate(ss, props):
     for p in props:
         i = ss.find(p)
         if i != -1:
+            # for 3 digit cm
+            heightOffset = 3
+            if ss.find("in") != -1:
+                # for 2 digit in
+                heightOffset = 2
+
             switch = {
                 # year fields
                 "byr:": validate_year(ss[i : i + len(p)], ss[i+ 4 : i + 8]),
                 "iyr:": validate_year(ss[i : i + len(p)], ss[ i+ 4 : i + 8]),
                 "eyr:": validate_year(ss[i : i + len(p)], ss[i+ 4 : i + 8]),
                 # height field
-                "hgt:": validate_height(ss[i + len(p) + 3: i + len(p) + 5], ss[i  :  i + 5]),
+                "hgt:": validate_height(ss[i + len(p) + heightOffset : i + len(p) + (2 + heightOffset)], ss[i + len(p)  : i + len(p) + heightOffset]),
                 # color fields
                 "hcl:": validate_color(ss[i : i + len(p)], ss[i + 5 : i + 11]),
-                "ecl:": validate_color(ss[i : i + len(p)], ss[i + 5 : i + 7]),
+                "ecl:": validate_color(ss[i : i + len(p)], ss[i + len(p) : i + len(p) + 3]),
                 # pid
                 "pid:": validate_pid(ss[i + 4 : i + 13])
             }
@@ -44,7 +50,6 @@ def find_and_validate(ss, props):
             else:
                 return False
         else:
-            # One property missing => Out
             return False
 
     return True
@@ -63,7 +68,7 @@ def validate_year(k, v):
     }
     return switch.get(k)
 
-
+# OK
 def validate_height(k, v):
     try: 
         v = int(v)
@@ -74,9 +79,11 @@ def validate_height(k, v):
         "cm": v >= 150 and v <= 193,
         "in": v >= 59 and v <= 76,
     }
-    return switch.get(k)
+    val = switch.get(k)
+    if val:
+        print("HEIGHT-VALID", k, "= ", v)
 
-
+# Checked => OK
 def validate_color(k, v):
     switch = {
         "hcl:": re.match(r"([a-f]|[1-9]){6}", v) != None,
@@ -84,6 +91,7 @@ def validate_color(k, v):
     }
     val = switch.get(k)
     if(val):
+        #print("COLOR-VALID: ", k, " = ", v)
         return True
     return val
 
